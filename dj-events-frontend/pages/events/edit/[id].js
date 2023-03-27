@@ -23,8 +23,6 @@ export default function EditEventPage({ evt }) {
     description: evt.attributes.description,
   });
 
-  console.log(evt.attributes.image.data);
-
   const [showModal, setShowModal] = useState(false);
 
   const [imagePreview, setImagePreview] = useState(
@@ -59,7 +57,6 @@ export default function EditEventPage({ evt }) {
       toast.error("Something Went Wrong");
     } else {
       const evt = await res.json();
-      console.log(evt);
       router.push(`/events/${evt.data.attributes.slug}`);
       // /${evt.data.attributes.slug}
     }
@@ -71,8 +68,8 @@ export default function EditEventPage({ evt }) {
   };
 
   const imageUploaded = async (e) => {
-    const res = await fetch(`${API_URL}/api/events/${evt.id}`);
-    const data = await res.json();
+    const res = await fetch(`${API_URL}/api/events/${evt.id}?populate=*`);
+    const { data } = await res.json();
     setImagePreview(
       data.attributes.image.data.attributes.formats.thumbnail.url
     );
@@ -162,7 +159,7 @@ export default function EditEventPage({ evt }) {
 
       <h2>Event Image</h2>
       {imagePreview ? (
-        <Image src={imagePreview} height={100} width={170} />
+        <Image src={imagePreview} alt="event image" height={100} width={170} />
       ) : (
         <div>
           <p>No image uploaded</p>
