@@ -15,11 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     error && toast.error(error);
-
-    return () => {
-      console.log("clean");
-    };
-  }, []);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();

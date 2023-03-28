@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { API_URL } from "@/config/index";
 import Link from "next/link";
@@ -11,8 +11,12 @@ import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
 import Image from "next/image";
 import { FaImage } from "react-icons/fa";
+import Cookies from "js-cookie";
+import AuthContext from "@/context/AuthContext";
 
 export default function EditEventPage({ evt }) {
+  const ctx = useContext(AuthContext);
+
   const [values, setValues] = useState({
     name: evt.attributes.name,
     performers: evt.attributes.performers,
@@ -75,6 +79,8 @@ export default function EditEventPage({ evt }) {
     );
     setShowModal(false);
   };
+
+  console.log(Cookies.get("jwt"));
 
   return (
     <Layout title="Add New Event">
@@ -180,7 +186,7 @@ export default function EditEventPage({ evt }) {
   );
 }
 
-export async function getServerSideProps({ params: { id } }) {
+export async function getServerSideProps({ params: { id }, req }) {
   const res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
   const evt = await res.json();
 
